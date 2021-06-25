@@ -27,7 +27,7 @@
 
 void delay()
 {
-	for (volatile int i = 0; i < 500000; i++);
+	for (volatile int i = 0; i < 100000; i++);
 }
 
 int main(void)
@@ -35,29 +35,114 @@ int main(void)
 	GPIO_Handle_t Btn1, Btn2, Btn3, Btn4, Btn5;
 	GPIO_Handle_t Led1, Led2, Led3, Led4, Led5;
 
-	Btn1.pGPIOx = GPIOA;
-	Btn1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_1;
+	// Buttons
+	Btn1.pGPIOx = GPIOC;
+	Btn1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_8;
 	Btn1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
 	Btn1.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	Btn1.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PD;
-
-	GPIO_PClkControl(GPIOA, ENABLE);
+	GPIO_PClkControl(GPIOC, ENABLE);
 	GPIO_Init(&Btn1);
 
-	Led1.pGPIOx = GPIOB;
-	Led1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
+	Btn2.pGPIOx = GPIOC;
+	Btn2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_10;
+	Btn2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	Btn2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Btn2.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PD;
+	GPIO_PClkControl(GPIOC, ENABLE);
+	GPIO_Init(&Btn2);
+
+
+	Btn3.pGPIOx = GPIOC;
+	Btn3.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_12;
+	Btn3.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	Btn3.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Btn3.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PD;
+	GPIO_PClkControl(GPIOC, ENABLE);
+	GPIO_Init(&Btn3);
+
+
+	Btn4.pGPIOx = GPIOG;
+	Btn4.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_2;
+	Btn4.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	Btn4.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Btn4.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PD;
+	GPIO_PClkControl(GPIOG, ENABLE);
+	GPIO_Init(&Btn4);
+
+
+	Btn5.pGPIOx = GPIOD;
+	Btn5.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
+	Btn5.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	Btn5.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Btn5.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PD;
+	GPIO_PClkControl(GPIOD, ENABLE);
+	GPIO_Init(&Btn5);
+
+	// Leds
+	Led1.pGPIOx = GPIOE;
+	Led1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_2;
 	Led1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
 	Led1.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	Led1.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
-	Led1.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-
-	GPIO_PClkControl(GPIOB, ENABLE);
+	Led1.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PUPD;
+	GPIO_PClkControl(GPIOE, ENABLE);
 	GPIO_Init(&Led1);
+
+	Led2.pGPIOx = GPIOE;
+	Led2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_5;
+	Led2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	Led2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Led2.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	Led2.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PUPD;
+	GPIO_PClkControl(GPIOE, ENABLE);
+	GPIO_Init(&Led2);
+
+	Led3.pGPIOx = GPIOE;
+	Led3.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_3;
+	Led3.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	Led3.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Led3.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	Led3.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PUPD;
+	GPIO_PClkControl(GPIOE, ENABLE);
+	GPIO_Init(&Led3);
+
+	Led4.pGPIOx = GPIOF;
+	Led4.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
+	Led4.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	Led4.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Led4.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	Led4.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PUPD;
+	GPIO_PClkControl(GPIOF, ENABLE);
+	GPIO_Init(&Led4);
+
+	Led5.pGPIOx = GPIOG;
+	Led5.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_1;
+	Led5.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	Led5.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	Led5.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	Led5.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PUPD;
+	GPIO_PClkControl(GPIOG, ENABLE);
+	GPIO_Init(&Led5);
+
 
 	while (1)
 	{
-		uint8_t value = GPIO_ReadFromInputPin(&Btn1);
-		GPIO_WriteToOutputPin(&Led1, value);
+		uint8_t value1 = GPIO_ReadFromInputPin(&Btn1);
+		uint8_t value2 = GPIO_ReadFromInputPin(&Btn2);
+		uint8_t value3 = GPIO_ReadFromInputPin(&Btn3);
+		uint8_t value4 = GPIO_ReadFromInputPin(&Btn4);
+		uint8_t value5 = GPIO_ReadFromInputPin(&Btn5);
+		GPIO_WriteToOutputPin(&Led1, value1);
+		GPIO_WriteToOutputPin(&Led2, value2);
+		GPIO_WriteToOutputPin(&Led3, value3);
+		GPIO_WriteToOutputPin(&Led4, value4);
+		GPIO_WriteToOutputPin(&Led5, value5);
 		delay();
 	}
+}
+
+void EXTI0_IRQHandler(void)
+{
+	GPIO_IRQHandling(0);
 }
