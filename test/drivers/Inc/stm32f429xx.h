@@ -25,7 +25,7 @@
 #define NVIC_ICER1				((volatile uint32_t*)(NVIC_ICER_BASEADDR + 0x04U))
 #define NVIC_ICER2				((volatile uint32_t*)(NVIC_ICER_BASEADDR + 0x08U))
 
-#define NVIC_IPR_BASEADDR		((volatile uint32_t*)(NVIC_BASEADDR + 0x400U))
+#define NVIC_IPR				((volatile uint32_t*)(NVIC_BASEADDR + 0x400U))
 
 /*
  * ARM Cortex Mx Processor number of priority bits implemented in Priority Register
@@ -47,7 +47,7 @@
  */
 
 #define APB1PERIPH_BASEADDR		0x40000000U
-#define APB2PERIPH_BASEADDR		0x40007800U
+#define APB2PERIPH_BASEADDR		0x40010000U
 #define AHB1PERIPH_BASEADDR		0x40020000U
 #define AHB2PERIPH_BASEADDR		0x50000000U
 
@@ -246,6 +246,27 @@ typedef struct
 #define IRQ_NO_EXTI9_5		23
 #define IRQ_NO_EXTI15_10	40
 
+/*
+ * Interrupt priority levels
+ */
+
+#define NVIC_IRQ_PRI0		0
+#define NVIC_IRQ_PRI1		1
+#define NVIC_IRQ_PRI2		2
+#define NVIC_IRQ_PRI3		3
+#define NVIC_IRQ_PRI4		4
+#define NVIC_IRQ_PRI5		5
+#define NVIC_IRQ_PRI6		6
+#define NVIC_IRQ_PRI7		7
+#define NVIC_IRQ_PRI8		8
+#define NVIC_IRQ_PRI9		9
+#define NVIC_IRQ_PRI10		10
+#define NVIC_IRQ_PRI11		11
+#define NVIC_IRQ_PRI12		12
+#define NVIC_IRQ_PRI13		13
+#define NVIC_IRQ_PRI14		14
+#define NVIC_IRQ_PRI15		15
+
 // Generic macros
 
 #define ENABLE				1
@@ -254,5 +275,8 @@ typedef struct
 #define RESET				DISABLE
 #define GPIO_PIN_SET		SET
 #define GPIO_PIN_RESET		RESET
+
+
+#include "stm32f429xx_gpio_driver.h"
 
 #endif /* INC_STM32F429XX_H_ */

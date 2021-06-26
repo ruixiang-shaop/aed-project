@@ -67,7 +67,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
 	{
 		// Clear moder
-		pGPIOHandle->pGPIOx->MODER &= ~(0x3U << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		pGPIOHandle->pGPIOx->MODER &= ~(0x3U << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 		// Set moder
 		aux = pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 		pGPIOHandle->pGPIOx->MODER |= aux;
@@ -98,8 +98,12 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 		uint8_t group = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
 		uint8_t offset = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
 		uint8_t portCode = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
+		// enable clock
 		SYSCFG_PCLK_EN();
-		SYSCFG->EXTICR[group] = portCode << (4 * offset);
+		// clear
+		SYSCFG->EXTICR[group] &= ~(0xFU << (4 * offset));
+		// set
+		SYSCFG->EXTICR[group] |= portCode << (4 * offset);
 
 		// 3. enable EXTI interrupt with IMR
 		EXTI->IMR |= 0x1U << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
@@ -278,17 +282,18 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
 	uint8_t offset = IRQNumber%4;
 
 	// clear
-	*(NVIC_IPR_BASEADDR + iprx*4) &= ~(0xFFU << (offset*8));
+	*(NVIC_IPR + iprx*4) &= ~(0xFFU << (offset*8));
 	// set
 	uint8_t shift_amount = (offset*8) + (8-NO_PR_BITS_IMPLEMENTED);
-	*(NVIC_IPR_BASEADDR + iprx*4) |= IRQPriority << shift_amount;
+	*(NVIC_IPR + iprx*4) |= IRQPriority << shift_amount;
 }
 
+// Clear pending register to avoid infinite interrupts
 void GPIO_IRQHandling(uint8_t PinNumber)
 {
 	// Clear exti pr register corresponding to the pin
-	if (EXTI->PR & (1 << PinNumber))
+	if (EXTI->PR & (0x1U << PinNumber))
 	{
-		EXTI->PR |= (1 << PinNumber);
+		EXTI->PR |= (0x1U << PinNumber);
 	}
 }
