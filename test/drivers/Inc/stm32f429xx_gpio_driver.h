@@ -73,7 +73,7 @@ typedef struct
 
 
 // GPIO pin pull up AND pull down
-#define GPIO_NO_PUPD   		0
+#define GPIO_PIN_NO_PUPD   		0
 #define GPIO_PIN_PU			1
 #define GPIO_PIN_PD			2
 
@@ -97,7 +97,8 @@ void GPIO_ToggleOutputPort(GPIO_Handle_t *pGPIOHandle);
 
 
 // IRQ configuration and ISR handling
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnOrDi);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnOrDi);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 #endif /* INC_STM32F429XX_GPIO_DRIVER_H_ */
