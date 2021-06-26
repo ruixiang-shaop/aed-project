@@ -275,17 +275,17 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnOrDi)
 }
 
 
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 {
 	// 1. Calculate IPR register
 	uint8_t iprx = IRQNumber/4;
 	uint8_t offset = IRQNumber%4;
 
 	// clear
-	*(NVIC_IPR + iprx*4) &= ~(0xFFU << (offset*8));
+	*(NVIC_IPR + iprx) &= ~(0xFFU << (offset*8));
 	// set
 	uint8_t shift_amount = (offset*8) + (8-NO_PR_BITS_IMPLEMENTED);
-	*(NVIC_IPR + iprx*4) |= IRQPriority << shift_amount;
+	*(NVIC_IPR + iprx) |= IRQPriority << shift_amount;
 }
 
 // Clear pending register to avoid infinite interrupts
