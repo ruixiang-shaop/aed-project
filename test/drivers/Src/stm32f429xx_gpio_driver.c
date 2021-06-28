@@ -185,38 +185,38 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 
 
 // Data read and write
-uint8_t GPIO_ReadFromInputPin(GPIO_Handle_t *pGPIOHandle)
+uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	// Shift to the left to move the input value to the last bit
-	uint8_t value = (pGPIOHandle->pGPIOx->IDR >> pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber) & 0x1U;
+	uint8_t value = (pGPIOx->IDR >> PinNumber) & 0x1U;
 	return value;
 }
 
-uint16_t GPIO_ReadFromInputPort(GPIO_Handle_t *pGPIOHandle)
+uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 {
-	uint16_t value = pGPIOHandle->pGPIOx->IDR;
+	uint16_t value = pGPIOx->IDR;
 	return value;
 }
 
-void GPIO_WriteToOutputPin(GPIO_Handle_t *pGPIOHandle, uint8_t value)
+void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Value)
 {
-	if (value == GPIO_PIN_SET)
+	if (Value == GPIO_PIN_SET)
 	{
-		pGPIOHandle->pGPIOx->ODR |= 0x1U << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
-	} else if (value == GPIO_PIN_RESET)
+		pGPIOx->ODR |= 0x1U << PinNumber;
+	} else if (Value == GPIO_PIN_RESET)
 	{
-		pGPIOHandle->pGPIOx->ODR &= ~(0x1U << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		pGPIOx->ODR &= ~(0x1U << PinNumber);
 	}
 }
 
-void GPIO_WriteToOutputPort(GPIO_Handle_t *pGPIOHandle, uint16_t value)
+void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
 {
-	pGPIOHandle->pGPIOx->ODR = value;
+	pGPIOx->ODR = Value;
 }
 
-void GPIO_ToggleOutputPort(GPIO_Handle_t *pGPIOHandle)
+void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
-	pGPIOHandle->pGPIOx->ODR ^= 0x1U << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
+	pGPIOx->ODR ^= 0x1U << PinNumber;
 }
 
 

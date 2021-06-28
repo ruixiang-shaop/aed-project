@@ -155,13 +155,15 @@ void EXTI9_5_IRQHandler(void)
 	if (EXTI->PR & (0x1U << 8))
 	{
 		GPIO_IRQHandling(8);
-		GPIO_WriteToOutputPin(&Led1, GPIO_ReadFromInputPin(&Btn1));
+		uint8_t value = GPIO_ReadFromInputPin(Btn1.pGPIOx, Btn1.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led1.pGPIOx, Led1.GPIO_PinConfig.GPIO_PinNumber, value);
 	}
 
 	if (EXTI->PR & (0x1U << 7))
 	{
 		GPIO_IRQHandling(7);
-		GPIO_WriteToOutputPin(&Led5, GPIO_ReadFromInputPin(&Btn5));
+		uint8_t value = GPIO_ReadFromInputPin(Btn5.pGPIOx, Btn5.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led5.pGPIOx, Led5.GPIO_PinConfig.GPIO_PinNumber, value);
 	}
 }
 
@@ -171,13 +173,15 @@ void EXTI15_10_IRQHandler(void)
 	if (EXTI->PR & (0x1U << 10))
 	{
 		GPIO_IRQHandling(10);
-		GPIO_WriteToOutputPin(&Led2, GPIO_ReadFromInputPin(&Btn2));
+		uint8_t value = GPIO_ReadFromInputPin(Btn2.pGPIOx, Btn2.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led2.pGPIOx, Led2.GPIO_PinConfig.GPIO_PinNumber, value);
 	}
 
 	if (EXTI->PR & (0x1U << 12))
 	{
 		GPIO_IRQHandling(12);
-		GPIO_WriteToOutputPin(&Led3, GPIO_ReadFromInputPin(&Btn3));
+		uint8_t value = GPIO_ReadFromInputPin(Btn3.pGPIOx, Btn3.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led3.pGPIOx, Led3.GPIO_PinConfig.GPIO_PinNumber, value);
 	}
 }
 
@@ -187,6 +191,7 @@ void EXTI2_IRQHandler(void)
 	if (EXTI->PR & (0x1U << 2))
 	{
 		GPIO_IRQHandling(2);
-		GPIO_WriteToOutputPin(&Led4, GPIO_ReadFromInputPin(&Btn4));
+		uint8_t value = GPIO_ReadFromInputPin(Btn4.pGPIOx, Btn4.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led4.pGPIOx, Led4.GPIO_PinConfig.GPIO_PinNumber, value);
 	}
 }

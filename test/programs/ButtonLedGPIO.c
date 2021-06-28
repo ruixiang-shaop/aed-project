@@ -128,16 +128,16 @@ int main(void)
 
 	while (1)
 	{
-		uint8_t value1 = GPIO_ReadFromInputPin(&Btn1);
-		uint8_t value2 = GPIO_ReadFromInputPin(&Btn2);
-		uint8_t value3 = GPIO_ReadFromInputPin(&Btn3);
-		uint8_t value4 = GPIO_ReadFromInputPin(&Btn4);
-		uint8_t value5 = GPIO_ReadFromInputPin(&Btn5);
-		GPIO_WriteToOutputPin(&Led1, value1);
-		GPIO_WriteToOutputPin(&Led2, value2);
-		GPIO_WriteToOutputPin(&Led3, value3);
-		GPIO_WriteToOutputPin(&Led4, value4);
-		GPIO_WriteToOutputPin(&Led5, value5);
+		uint8_t value1 = GPIO_ReadFromInputPin(Btn1.pGPIOx, Btn1.GPIO_PinConfig.GPIO_PinNumber);
+		uint8_t value2 = GPIO_ReadFromInputPin(Btn2.pGPIOx, Btn2.GPIO_PinConfig.GPIO_PinNumber);
+		uint8_t value3 = GPIO_ReadFromInputPin(Btn3.pGPIOx, Btn3.GPIO_PinConfig.GPIO_PinNumber);
+		uint8_t value4 = GPIO_ReadFromInputPin(Btn4.pGPIOx, Btn4.GPIO_PinConfig.GPIO_PinNumber);
+		uint8_t value5 = GPIO_ReadFromInputPin(Btn5.pGPIOx, Btn5.GPIO_PinConfig.GPIO_PinNumber);
+		GPIO_WriteToOutputPin(Led1.pGPIOx, Led1.GPIO_PinConfig.GPIO_PinNumber, value1);
+		GPIO_WriteToOutputPin(Led2.pGPIOx, Led2.GPIO_PinConfig.GPIO_PinNumber, value2);
+		GPIO_WriteToOutputPin(Led3.pGPIOx, Led3.GPIO_PinConfig.GPIO_PinNumber, value3);
+		GPIO_WriteToOutputPin(Led4.pGPIOx, Led4.GPIO_PinConfig.GPIO_PinNumber, value4);
+		GPIO_WriteToOutputPin(Led5.pGPIOx, Led5.GPIO_PinConfig.GPIO_PinNumber, value5);
 		delay();
 	}
 }
