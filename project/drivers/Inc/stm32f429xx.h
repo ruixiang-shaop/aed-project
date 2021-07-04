@@ -9,6 +9,7 @@
 #define INC_STM32F429XX_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 /*
  * ARM Cortex Mx Processor NVIC register Addresses
@@ -270,6 +271,12 @@ typedef struct
 #define IRQ_NO_EXTI4		10
 #define IRQ_NO_EXTI9_5		23
 #define IRQ_NO_EXTI15_10	40
+#define IRQ_NO_I2C1_EV		31
+#define IRQ_NO_I2C1_ER		32
+#define IRQ_NO_I2C2_EV		33
+#define IRQ_NO_I2C2_ER		34
+#define IRQ_NO_I2C3_EV		72
+#define IRQ_NO_I2C3_ER		73
 
 /*
  * Interrupt priority levels
@@ -363,8 +370,10 @@ typedef struct
 #define RESET				DISABLE
 #define GPIO_PIN_SET		SET
 #define GPIO_PIN_RESET		RESET
-
+#define FLAG_SET			SET
+#define FLAG_RESET			RESET
 
 #include "stm32f429xx_gpio_driver.h"
+#include "stm32f429xx_i2c_driver.h"
 
 #endif /* INC_STM32F429XX_H_ */
