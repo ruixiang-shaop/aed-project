@@ -122,6 +122,7 @@ void Init_GPIO_Leds(void)
 // I2C2_SDA PF0
 // Each pin (master and slave) must be connected to the same bus, one for SCL and another for SDA
 // Each bus must be powered by VCC (3.3V) with a resistor of 5kOhm
+// Also ground from master and slave must be shared
 
 
 void Init_I2C2(void)
