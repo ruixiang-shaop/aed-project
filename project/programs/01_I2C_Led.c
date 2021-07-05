@@ -181,7 +181,9 @@ void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle,uint8_t AppEv)
 	if(AppEv == I2C_EV_DATA_REQ)
 	{
 		// Master wants data
-		//TODO not used in this example
+		// In this example we send the status of the first led
+		uint8_t status = GPIO_ReadFromInputPin(Led1.pGPIOx, Led1.GPIO_PinConfig.GPIO_PinNumber);
+		I2C_SlaveSendData(I2C2, status);
 	} else if (AppEv == I2C_EV_DATA_RCV)
 	{
 		// Master send data to slave, must read it
@@ -189,7 +191,7 @@ void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle,uint8_t AppEv)
 	} else if (AppEv == I2C_ERROR_AF)
 	{
 		// Master send NACK, don't send more data
-		//TODO not used in this example because slave isn't transmitting
+		// Don't do anything we only send one byte
 	} else if (AppEv == I2C_EV_STOP)
 	{
 		// Master send data to slave and it has ended.

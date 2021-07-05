@@ -40,6 +40,7 @@ void delay()
 uint8_t on1 = 0x0U, on2 = 0x2U, on3 = 0x4U, on4 = 0x6U, on5 = 0x8;
 
 GPIO_Handle_t Btn1, Btn2, Btn3, Btn4, Btn5;
+GPIO_Handle_t Led;
 I2C_Handle_t I2C2Handle;
 
 // Btn1		PC8
@@ -105,6 +106,18 @@ void Init_GPIO_Buttons(void)
 	GPIO_IRQInterruptConfig(IRQ_NO_EXTI9_5, ENABLE);
 }
 
+void Init_GPIO_Leds(void)
+{
+	memset(&Led, 0, sizeof(Led));
+
+	Led.pGPIOx = GPIOB;
+	Led.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
+	Led.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	Led.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	GPIO_PClkControl(GPIOB, ENABLE);
+	GPIO_Init(&Led);
+}
+
 // I2C2_SCL PF1
 // I2C2_SDA PF0
 
@@ -144,11 +157,20 @@ int main(void)
 {
 	Init_GPIO_Buttons();
 
+	Init_GPIO_Leds();
+
 	Init_I2C2();
 	// Don't forget to enable I2C
 	I2C_PControl(I2C2, ENABLE);
 
-	while (1);
+	uint8_t emergency;
+
+	while (1)
+	{
+		delay();
+		I2C_MasterReceiveData(&I2C2Handle, &emergency, 1, SLAVE_ADDR, I2C_DISABLE_SR);
+		GPIO_WriteToOutputPin(Led.pGPIOx, Led.GPIO_PinConfig.GPIO_PinNumber, emergency);
+	}
 }
 
 // Btn1 (8), Btn5 (7)

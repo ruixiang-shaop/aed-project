@@ -311,8 +311,8 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_
 		// Clear ADDR flag
 		I2C_ClearADDRFlag(pI2CHandle);
 
-		// Wait until TXE is set
-		while (!I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_TXE));
+		// Wait until RXNE is set
+		while (!I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_RXNE));
 
 		// Generate STOP condition
 		if (Sr == I2C_DISABLE_SR)
@@ -332,8 +332,8 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_
 		// Read all the data
 		for (uint32_t i = length; i > 0; i--)
 		{
-			// Wait until TXE is set
-			while (!I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_TXE));
+			// Wait until RXNE is set
+			while (!I2C_GetFlagStatus(pI2CHandle->pI2Cx, I2C_FLAG_RXNE));
 
 			if (i == 2)	// Special case when there are only two bytes remaining
 			{
