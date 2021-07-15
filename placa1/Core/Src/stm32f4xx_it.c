@@ -52,7 +52,7 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void resetLeds(void);
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -231,7 +231,7 @@ void SysTick_Handler(void)
 void EXTI1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI1_IRQn 0 */
-
+	resetLeds();
   /* USER CODE END EXTI1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
@@ -253,6 +253,7 @@ void EXTI1_IRQHandler(void)
 void EXTI2_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI2_IRQn 0 */
+	resetLeds();
 	// LED 2
   /* USER CODE END EXTI2_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
@@ -274,6 +275,7 @@ void EXTI2_IRQHandler(void)
 void EXTI3_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI3_IRQn 0 */
+	resetLeds();
 	// LED 4
   /* USER CODE END EXTI3_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
@@ -296,6 +298,7 @@ void EXTI3_IRQHandler(void)
 void EXTI4_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_IRQn 0 */
+	resetLeds();
 	// LED 1
   /* USER CODE END EXTI4_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
@@ -332,6 +335,7 @@ void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	// LED 3
+	resetLeds();
 	if (EXTI->PR & EXTI_PR_PR5)
 	{
 	  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
@@ -371,23 +375,29 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
   if (EXTI->PR & EXTI_PR_PR13)
   {
-	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
-	{
-	  Error_Handler();
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		canTX[i] = (canTX[i] + 1) % 2;
-	}
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+    canTX[0] = 2;
+		if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_SET);
+		HAL_Delay(1000);
   }
   /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-  HAL_Delay(15);
+
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
-
+void resetLeds(void)
+{
+	HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_RESET);
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

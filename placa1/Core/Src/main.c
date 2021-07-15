@@ -344,28 +344,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	// Receive CAN bus message to canRX buffer
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, canRX);
 
-	if (canRX[0])
+	if (canRX[0] == 0x2U)
 	{
 		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_RESET);
-	}
-
-	if (canRX[1])
-	{
 		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_RESET);
-	}
-
-	if (canRX[2])
-	{
 		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_RESET);
+		HAL_Delay(1000);
 	}
 
 }
