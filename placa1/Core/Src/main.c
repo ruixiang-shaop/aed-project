@@ -50,6 +50,9 @@ uint8_t canRX[8] = {0, 0, 0};	// CAN Bus Receive Buffer
 CAN_FilterTypeDef canFilter;	// CAN Bus Filter
 volatile uint32_t canMailboxTX;			// CAN Bus Mail box variable
 uint8_t canTX[8] = {0, 0, 0};
+
+uint8_t ledStatus[5] = {0, 0, 0, 0, 0};	// To set or reset placa3 led's
+uint8_t ledAnimation = 0;				// Animation for placa3
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

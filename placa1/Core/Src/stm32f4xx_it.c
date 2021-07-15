@@ -62,6 +62,22 @@ extern CAN_HandleTypeDef hcan2;
 extern CAN_TxHeaderTypeDef txHeader;
 extern volatile uint32_t canMailboxTX;
 extern uint8_t canTX[3];
+
+extern uint8_t ledStatus[5];	// To set or reset placa3 led's
+extern uint8_t ledAnimation;				// Animation for placa3
+
+/*
+ * Pin ussage for GPIO
+ *
+ * LED1 -> PD4
+ * LED2 -> PE2
+ * LED3 -> PE5
+ * LED4 -> PE3
+ * LED5 -> PF7
+ * Animation -> PG1
+ * Reset -> PC13
+ */
+
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -205,6 +221,13 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles EXTI line1 interrupt.
   */
+
+/*
+ * CAN data -> Application protocol
+ * Byte[0]: 0 single led, 1 effect, 2 alarm
+ * Byte[1]: led id (0..4), effect id (0..3)
+ * Byte[2]: only for single led -> 0 off, 1 on
+ */
 void EXTI1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI1_IRQn 0 */
@@ -218,15 +241,23 @@ void EXTI1_IRQHandler(void)
 
 /**
   * @brief This function handles EXTI line2 interrupt.
+  *
   */
 void EXTI2_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI2_IRQn 0 */
-
+	// LED 2
   /* USER CODE END EXTI2_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
   /* USER CODE BEGIN EXTI2_IRQn 1 */
-
+  ledStatus[1] ^= 0x1U;
+  canTX[0] = 0;
+  canTX[1] = 1;
+  canTX[2] = ledStatus[1];
+	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+	{
+		Error_Handler();
+	}
   /* USER CODE END EXTI2_IRQn 1 */
 }
 
@@ -236,25 +267,40 @@ void EXTI2_IRQHandler(void)
 void EXTI3_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI3_IRQn 0 */
-
+	// LED 4
   /* USER CODE END EXTI3_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
   /* USER CODE BEGIN EXTI3_IRQn 1 */
-
+  ledStatus[3] ^= 0x1U;
+  canTX[0] = 0;
+  canTX[1] = 3;
+  canTX[2] = ledStatus[3];
+	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+	{
+		Error_Handler();
+	}
   /* USER CODE END EXTI3_IRQn 1 */
 }
 
 /**
   * @brief This function handles EXTI line4 interrupt.
+  *
   */
 void EXTI4_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_IRQn 0 */
-
+	// LED 1
   /* USER CODE END EXTI4_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
   /* USER CODE BEGIN EXTI4_IRQn 1 */
-
+  ledStatus[0] ^= 0x1U;
+  canTX[0] = 0;
+  canTX[1] = 0;
+  canTX[2] = ledStatus[0];
+	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+	{
+		Error_Handler();
+	}
   /* USER CODE END EXTI4_IRQn 1 */
 }
 
@@ -278,10 +324,33 @@ void CAN1_RX0_IRQHandler(void)
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-
+	// LED 3
+	if (EXTI->PR & EXTI_PR_PR5)
+	{
+	  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+	  ledStatus[2] ^= 0x1U;
+	  canTX[0] = 0;
+	  canTX[1] = 2;
+	  canTX[2] = ledStatus[2];
+		if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+		{
+			Error_Handler();
+		}
+	}
+	// LED 5
+	if (EXTI->PR & EXTI_PR_PR7)
+	{
+	  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
+	  ledStatus[4] ^= 0x1U;
+	  canTX[0] = 0;
+	  canTX[1] = 4;
+	  canTX[2] = ledStatus[4];
+		if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+		{
+			Error_Handler();
+		}
+	}
   /* USER CODE END EXTI9_5_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
