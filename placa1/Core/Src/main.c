@@ -252,14 +252,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, led1_Pin|led3_Pin|led2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : btn1_Pin */
-  GPIO_InitStruct.Pin = btn1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(btn1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : btn3_Pin btn2_Pin */
-  GPIO_InitStruct.Pin = btn3_Pin|btn2_Pin;
+  /*Configure GPIO pins : btn2_Pin btn4_Pin btn3_Pin */
+  GPIO_InitStruct.Pin = btn2_Pin|btn4_Pin|btn3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -270,11 +264,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(reset_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : btn4_Pin */
-  GPIO_InitStruct.Pin = btn4_Pin;
+  /*Configure GPIO pin : btn5_Pin */
+  GPIO_InitStruct.Pin = btn5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(btn4_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(btn5_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : led1_Pin led3_Pin led2_Pin */
   GPIO_InitStruct.Pin = led1_Pin|led3_Pin|led2_Pin;
@@ -283,11 +277,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : btn5_Pin */
-  GPIO_InitStruct.Pin = btn5_Pin;
+  /*Configure GPIO pin : animation_Pin */
+  GPIO_InitStruct.Pin = animation_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(btn5_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(animation_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : btn1_Pin */
+  GPIO_InitStruct.Pin = btn1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(btn1_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI1_IRQn, 15, 0);
@@ -298,6 +298,9 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI3_IRQn, 15, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 15, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 15, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);

@@ -245,6 +245,20 @@ void EXTI3_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles EXTI line4 interrupt.
+  */
+void EXTI4_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_IRQn 0 */
+
+  /* USER CODE END EXTI4_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+  /* USER CODE BEGIN EXTI4_IRQn 1 */
+
+  /* USER CODE END EXTI4_IRQn 1 */
+}
+
+/**
   * @brief This function handles CAN1 RX0 interrupts.
   */
 void CAN1_RX0_IRQHandler(void)
@@ -281,7 +295,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
   if (EXTI->PR & EXTI_PR_PR13)
   {
-	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, &canMailboxTX) != HAL_OK)
+	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
 	{
 	  Error_Handler();
 	}
