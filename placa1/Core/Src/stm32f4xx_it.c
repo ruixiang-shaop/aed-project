@@ -235,7 +235,14 @@ void EXTI1_IRQHandler(void)
   /* USER CODE END EXTI1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
+  canTX[0] = 1;
+  canTX[1] = ledAnimation;
+	if (HAL_CAN_AddTxMessage(&hcan2, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
+  ledAnimation = (ledAnimation + 1) % 4;
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
