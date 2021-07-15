@@ -417,14 +417,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		i2c_dataTX |= 0x0U;
 		i2c_dataTX |= canRX[1] << 2;
 		i2c_dataTX |= canRX[2] << 5;
-		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, 0xFFFF);
+		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, HAL_MAX_DELAY);
 		break;
 	// Do an animation with the leds
 	case 1:
 		/*
 		 * Bit[1:0] = 01
-		 * Bit[
+		 * Bit[3:2] = {00, ... , 11} animation id
 		 */
+		i2c_dataTX |= 0x1U;
+		i2c_dataTX |= canRX[1] << 2;
+		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, HAL_MAX_DELAY);
 		break;
 	// Reset alarm
 	case 2:
