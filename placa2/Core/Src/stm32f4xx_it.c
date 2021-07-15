@@ -240,22 +240,22 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
   if (EXTI->PR & EXTI_PR_PR13)
   {
-
 	  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-	if (HAL_CAN_AddTxMessage(&hcan1, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
-	{
-	  Error_Handler();
+    canTX[0] = 2;
+		if (HAL_CAN_AddTxMessage(&hcan1, &txHeader, canTX, (uint32_t*) &canMailboxTX) != HAL_OK)
+		{
+			Error_Handler();
+		}
+		uint8_t i2c_dataTX = 0x3U;
+		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, HAL_MAX_DELAY);
+		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_SET);
+		HAL_Delay(1000);
 	}
-	for (int i = 0; i < 3; i++)
-	{
-		canTX[i] = (canTX[i] + 1) % 2;
-	}
-
-  }
   /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-  HAL_Delay(15);
+
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 

@@ -43,6 +43,7 @@
 CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
+I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim2;
@@ -63,13 +64,20 @@ static void MX_CAN2_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_CAN1_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 static void CAN_Messages_Init(void);
+void resetLeds(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void resetLeds(void)
+{
+	HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_RESET);
+}
 /* USER CODE END 0 */
 
 /**
@@ -104,7 +112,9 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM2_Init();
   MX_CAN1_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
   CAN_Messages_Init();
 
   if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
@@ -237,6 +247,52 @@ static void MX_CAN2_Init(void)
   /* USER CODE BEGIN CAN2_Init 2 */
 
   /* USER CODE END CAN2_Init 2 */
+
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 400000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -414,6 +470,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		 * Bit[4:2] = {000, 001, ... , 100} led id
 		 * Bit[5] = {0, 1} on or off
 		 */
+		resetLeds();
 		i2c_dataTX |= 0x0U;
 		i2c_dataTX |= canRX[1] << 2;
 		i2c_dataTX |= canRX[2] << 5;
@@ -425,14 +482,36 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		 * Bit[1:0] = 01
 		 * Bit[3:2] = {00, ... , 11} animation id
 		 */
+		resetLeds();
 		i2c_dataTX |= 0x1U;
 		i2c_dataTX |= canRX[1] << 2;
 		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, HAL_MAX_DELAY);
 		break;
-	// Reset alarm
+	// Alarm
 	case 2:
+		/*
+		 * Bit[1:0] = 11
+		 */
+		i2c_dataTX |= 0x3U;
+		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, HAL_MAX_DELAY);
+		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_SET);
+		HAL_Delay(1000);
 		break;
 	}
+}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+//	uint8_t i2c_dataRX = 0;
+//	HAL_I2C_Master_Receive(&hi2c1, 0x3U << 1, &i2c_dataRX, 1, HAL_MAX_DELAY);
+//	if ((i2c_dataRX & 0x1U) == 0x1U)
+//	{
+//		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
+//	} else
+//	{
+//		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_RESET);
+//	}
 }
 /* USER CODE END 4 */
 
