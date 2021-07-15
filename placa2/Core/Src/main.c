@@ -398,31 +398,38 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 	// Receive CAN bus message to canRX buffer
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rxHeader, canRX);
+	/*
+	 * Byte[0]: 0 single led, 1 effect, 2 alarm
+	 * Byte[1]: led id (0..4), effect id (0..3)
+	 * Byte[2]: single led -> 0 off, 1 on
+	 */
+	uint8_t i2c_dataTX = 0x0U;
 
-	if (canRX[0])
+	switch (canRX[0])
 	{
-		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led1_GPIO_Port, led1_Pin, GPIO_PIN_RESET);
+	// Change state of only one led
+	case 0:
+		/*
+		 * Bit[1:0] = 00
+		 * Bit[4:2] = {000, 001, ... , 100} led id
+		 * Bit[5] = {0, 1} on or off
+		 */
+		i2c_dataTX |= 0x0U;
+		i2c_dataTX |= canRX[1] << 2;
+		i2c_dataTX |= canRX[2] << 5;
+		HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDR << 1, &i2c_dataTX, 1, 0xFFFF);
+		break;
+	// Do an animation with the leds
+	case 1:
+		/*
+		 * Bit[1:0] = 01
+		 * Bit[
+		 */
+		break;
+	// Reset alarm
+	case 2:
+		break;
 	}
-
-	if (canRX[1])
-	{
-		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led2_GPIO_Port, led2_Pin, GPIO_PIN_RESET);
-	}
-
-	if (canRX[2])
-	{
-		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_SET);
-	} else
-	{
-		HAL_GPIO_WritePin(led3_GPIO_Port, led3_Pin, GPIO_PIN_RESET);
-	}
-
 }
 /* USER CODE END 4 */
 
