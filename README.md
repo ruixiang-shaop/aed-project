@@ -21,4 +21,4 @@ Board model: [NUCLEO-F429ZI](https://www.st.com/en/evaluation-tools/nucleo-f429z
 
 ## Development environment
 
-STM32CubeIDE v1.6.1 on Windows 10.
+STM32CubeIDE v1.6.1 (includes STM32CubeMX	v6.2.1) on Windows 10.
