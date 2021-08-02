@@ -317,29 +317,20 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c)
 
   switch (tipoMensaje) {
     case 0x0:
-      /* Single led */
-      HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+      /* Turn on/off single led */
+      WRITE_ALL_BOARD_LEDS(GPIO_PIN_RESET); // In case that the alarm was previously triggered
       HAL_GPIO_WritePin(LEDS_GPIO_Ports[idLed], LEDS_Pins[idLed], onOff);
       break;
     case 0x1:
-      /* Efecto */
-      HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+      /* Animation (effect) change */
+      WRITE_ALL_BOARD_LEDS(GPIO_PIN_RESET); // In case that the alarm was previously triggered
       efectoActual = fxId;
       break;
     case 0x3:
-      /* Alarma */
-      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+      /* Alarm */
+      WRITE_ALL_EXTERNAL_LEDS(GPIO_PIN_RESET); // Turn off external LEDs
+      WRITE_ALL_BOARD_LEDS(GPIO_PIN_SET); // Turn on built-in LEDs as alarm indicator
+      // Stop animation
       efectoActual = 0xFF;
       etapa = 0;
       HAL_Delay(1000);

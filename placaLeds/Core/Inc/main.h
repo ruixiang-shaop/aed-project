@@ -78,7 +78,24 @@ void Error_Handler(void);
 #define LED1_Pin GPIO_PIN_8
 #define LED1_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+// Writes the same value (0/1) to the 3 built-in LEDs
+#define WRITE_ALL_BOARD_LEDS(onOff) do {\
+    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, onOff);\
+    HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, onOff);\
+    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, onOff);\
+} while(0)
 
+// Writes the lX value (0/1) to the lX external LED (5 in total)
+#define WRITE_EXTERNAL_LEDS(l1, l2, l3, l4, l5) do {\
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, l1);\
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, l2);\
+  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, l3);\
+  HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, l4);\
+  HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, l5);\
+} while (0)
+
+// Writes the same value (0/1) to the 5 external LEDs
+#define WRITE_ALL_EXTERNAL_LEDS(onOff) WRITE_EXTERNAL_LEDS(onOff, onOff, onOff, onOff, onOff)
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
