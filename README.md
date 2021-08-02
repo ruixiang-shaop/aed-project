@@ -1,2 +1,2 @@
 # aed-project
-In this branch we create our own drivers for peripherals following the tutorials and some program examples.
+This branch implements the program for the third board using STM32 HAL API.
